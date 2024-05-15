@@ -3,7 +3,13 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include <papi.h>
 
+void handle_error (int retval)
+{
+    printf("PAPI error %d: %s\n", retval, PAPI_strerror(retval));
+    exit(1);
+}
 
 ByteBuffer readFileToByteArray(const std::string &filename) {
     std::ifstream file(filename, std::ios::binary | std::ios::ate);
@@ -41,9 +47,17 @@ int main(int argc, char *argv[]) {
     RouterIndicate routerIndicate;
     routerIndicate.SetUp();
 
+    int retval = PAPI_hl_region_begin("computation");
+    if ( retval != PAPI_OK )
+        handle_error(retval);
+
     routerIndicate.router.indicate(routerIndicate.get_up_packet(byteArray),
                                    routerIndicate.mac_address_sender,
                                    routerIndicate.mac_address_destination);
+
+    retval = PAPI_hl_region_end("computation");
+    if ( retval != PAPI_OK )
+        handle_error(retval);
 
     return 0;
 }

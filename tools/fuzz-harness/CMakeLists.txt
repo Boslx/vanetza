@@ -1,4 +1,7 @@
-find_package(Threads)
+find_package(Threads REQUIRED)
+find_package(PAPI REQUIRED)
+
+include_directories(${PAPI_INCLUDE_DIRS})
 
 add_executable(routerIndicatePersistentFuzz
         router_indicate_fuzz.cpp
@@ -13,7 +16,6 @@ add_executable(routerIndicateTest
 )
 target_compile_definitions(routerIndicateTest PUBLIC NDEBUG)
 target_compile_options(routerIndicateTest PUBLIC -Wall)
-target_compile_options(routerIndicateTest PRIVATE -fsanitize=address)
-target_link_libraries(routerIndicateTest PRIVATE -fsanitize=address)
-target_link_libraries(routerIndicateTest PUBLIC Boost::system Boost::program_options vanetza)
+# target_compile_options(routerIndicateTest PRIVATE -fsanitize=address)
+target_link_libraries(routerIndicateTest PUBLIC Boost::system Boost::program_options vanetza ${PAPI_LIBRARIES})
 install(TARGETS routerIndicateTest EXPORT ${PROJECT_NAME} DESTINATION ${CMAKE_INSTALL_BINDIR})
