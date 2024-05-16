@@ -7,7 +7,7 @@ add_executable(routerIndicatePersistentFuzz
         router_indicate_fuzz.cpp
         RouterIndicate.h
 )
-target_link_libraries(routerIndicatePersistentFuzz PUBLIC Boost::system Boost::program_options vanetza)
+target_link_libraries(routerIndicatePersistentFuzz PUBLIC Boost::system Boost::program_options vanetza ${PAPI_LIBRARIES})
 install(TARGETS routerIndicatePersistentFuzz EXPORT ${PROJECT_NAME} DESTINATION ${CMAKE_INSTALL_BINDIR})
 
 add_executable(routerIndicateTest
